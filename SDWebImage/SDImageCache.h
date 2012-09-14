@@ -28,13 +28,6 @@
 + (SDImageCache *)sharedImageCache;
 
 /**
- * Sets the global maximum cache age
- *
- * @param maxCacheAge The maximum length of time to keep an image in the cache, in seconds
- */
-+ (void) setMaxCacheAge:(NSInteger) maxCacheAge;
-
-/**
  * Store an image into memory and disk cache at the given key.
  *
  * @param image The image to store
@@ -62,6 +55,17 @@
  * @param toDisk Store the image to disk cache if YES
  */
 - (void)storeImage:(UIImage *)image imageData:(NSData *)data forKey:(NSString *)key toDisk:(BOOL)toDisk;
+
+/**
+ * Synchronously store an image into memory and disk caches at the given key.
+ *
+ * @param image The image to store
+ * @param data The image data as returned by the server, this representation will be used for disk storage
+ *             instead of converting the given image object into a storable/compressed image format in order
+ *             to save quality and CPU
+ * @param toDiskWithKey The unique image cache key, usually it's image absolute URL
+ */
+- (void)synchronouslyStoreImage:(UIImage *)image imageData:(NSData *)data toDiskWithKey:(NSString *)key;
 
 /**
  * Query the memory cache for an image at a given key and fallback to disk cache

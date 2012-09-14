@@ -123,11 +123,6 @@ static natural_t get_free_memory(void)
     return instance;
 }
 
-+ (void) setMaxCacheAge:(NSInteger)maxCacheAge
-{
-    cacheMaxCacheAge = maxCacheAge;
-}
-
 #pragma mark SDImageCache (private)
 
 - (NSString *)cachePathForKey:(NSString *)key
@@ -225,6 +220,30 @@ static natural_t get_free_memory(void)
 }
 
 #pragma mark ImageCache
+
+- (void)synchronouslyStoreImage:(UIImage *)image imageData:(NSData *)data toDiskWithKey:(NSString *)key
+{
+    NSAssert(NO == [NSThread isMainThread], @"This operation should not be done into the main application thread.");
+    
+    if (!image || !key)
+    {
+        return;
+    }
+    // Store image into memory cache
+    [self storeImage:image imageData:data forKey:key toDisk:NO];
+    
+    NSArray *keyWithData;
+    if (data)
+    {
+        keyWithData = [NSArray arrayWithObjects:key, data, nil];
+    }
+    else
+    {
+        keyWithData = [NSArray arrayWithObjects:key, nil];
+    }
+    // Synchronously store image into disk cache and return
+    [self storeKeyWithDataToDisk:keyWithData];
+}
 
 - (void)storeImage:(UIImage *)image imageData:(NSData *)data forKey:(NSString *)key toDisk:(BOOL)toDisk
 {

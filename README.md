@@ -170,6 +170,12 @@ By default, the image will be stored in memory cache as well as on disk cache (a
 you want only the memory cache, use the alternative method storeImage:forKey:toDisk: with a negative
 third argument.
 
+Finally, if you are already running a background task and want the memory and disk caches to be updated synchronously, use the alternative method:
+
+```objective-c
+[[SDImageCache sharedImageCache] synchronouslyStoreImage:myImage imageData:myImageData toDiskWithKey:myCacheKey];
+```
+
 ### Using cache key filter
 
 Sometime, you may not want to use the image URL as cache key because part of the URL is dynamic
